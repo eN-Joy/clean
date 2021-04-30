@@ -1,0 +1,68 @@
+from django.db import models
+from django.urls import reverse
+
+
+class Nick(models.Model):
+
+    # Fields
+    name = models.CharField(max_length=20, db_index=True, unique=True)
+    gender = models.BooleanField(null=True)
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self):
+        return reverse("nick_Nick_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("nick_Nick_update", args=(self.pk,))
+
+
+class Category(models.Model):
+
+    # Fields
+    slug = models.SlugField(max_length=20, unique=True)
+    name = models.CharField(max_length=20)
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self):
+        return reverse("nick_Category_detail", args=(self.slug,))
+
+    def get_update_url(self):
+        return reverse("nick_Category_update", args=(self.slug,))
+
+
+class Post(models.Model):
+
+    # Relationships
+    nick = models.ForeignKey("nick.Nick", on_delete=models.CASCADE)
+    category = models.ForeignKey("nick.Category", on_delete=models.CASCADE)
+
+    # Fields
+    reply_to = models.IntegerField(null=True)
+    bytes = models.IntegerField()
+    url = models.IntegerField()
+    votes = models.IntegerField(null=True, blank=True)
+    hits = models.IntegerField(null=True, blank=True)
+    post_date = models.DateTimeField()
+    title = models.CharField(max_length=100)
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return str(self.title)
+
+    def get_absolute_url(self):
+        return reverse("nick_Post_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("nick_Post_update", args=(self.pk,))

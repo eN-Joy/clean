@@ -1,0 +1,26 @@
+{% load static %}
+<html>
+
+<head>
+  <title>Django Builder - clean</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+
+  {% comment %} <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script> {% endcomment %}
+</head>
+
+<body>
+  <div id="content" class="container">
+    <h2>Home: <a href="{% url 'index' %}">clean</a></h2>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Your Apps</h5>
+        <p class="card-text">{% block content %}{% endblock %}</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

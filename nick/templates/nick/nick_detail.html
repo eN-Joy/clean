@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<p>
+    <a class="btn btn-light" href="{% url 'nick_Nick_list' %}">
+        Nick Listing
+    </a>
+</p>
+<div>
+    <p>We'll add questions here:</p>
+    <ul>
+        <li>
+            How many posts has the user made?
+
+            {{object.number_of_post}}
+        </li>
+        {% comment %} <li>
+            In how many categories?
+            {% for post in object.posts_per_cat %}
+        <li>{{ post.category__name}} has {{post.post_count}}</li>
+        {% endfor %}
+        </li> {% endcomment %}
+    </ul>
+</div>
+<div>
+    <p>
+        Now let's work on who replied to this user?</p>
+</div>
+
+<div>
+    <p>reply to</p>
+    <li>
+        In how many categories?
+        {% for post in object.reply_to %}
+    <li>{{ nick.name }} replied to {{ post.nick__name}} {{post.reply_to_count}} times, </li>
+    {% endfor %}
+    </li>
+    <hr>
+    {% for post in object.replied_by %}
+    <li>{{ nick.name }} was replied by {{ post.nick__name}} {{post.replied_by_count}} times, </li>
+    {% endfor %}
+
+</div>
+<div>
+    {% comment %} <canvas id="per_cat" width="500" height="500"></canvas>
+
+    <script>
+        let ctx = document.getElementById("per_cat").getContext("2d");
+
+        let chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: [{
+                        %
+                        for post in object.posts_per_cat %
+                    }
+                    "{{post.category__name}}", {
+                        % endfor %
+                    }
+                ],
+                datasets: [{
+                    label: "Gross volume ($)",
+                    backgroundColor: "#79AEC8",
+                    borderColor: "#417690",
+                    data: [{
+                        %
+                        for post in object.posts_per_cat %
+                    } {
+                        {
+                            post.post_count
+                        }
+                    }, {
+                        % endfor %
+                    }]
+                }]
+            },
+            options: {
+                title: {
+                    text: "Gross Volume in 2020",
+                    display: true
+                }
+            }
+        });
+    </script> {% endcomment %}
+</div>
+
+<div>
+    <canvas id="per_hour" width="500" height="500"></canvas>
+
+    <script>
+        let ctx = document.getElementById("per_hour").getContext("2d");
+
+        let chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: [{
+                        %
+                        for post in object.posts_per_hour %
+                    }
+                    "{{post.hour}}", {
+                        % endfor %
+                    }
+                ],
+                datasets: [{
+                    label: "Gross volume ($)",
+                    backgroundColor: "#79AEC8",
+                    borderColor: "#417690",
+                    data: [{
+                        %
+                        for post in object.posts_per_hour %
+                    } {
+                        {
+                            post.hour_count
+                        }
+                    }, {
+                        % endfor %
+                    }]
+                }]
+            },
+            options: {
+                title: {
+                    text: "Gross Volume in 2020",
+                    display: true
+                }
+            }
+        });
+    </script>
+</div>
+
+
+<table class="table">
+    <tr>
+        <td>name</td>
+        <td>{{ object.name }}</td>
+    </tr>
+    <tr>
+        <td>gender</td>
+        <td>{{ object.gender }}</td>
+    </tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'nick_Post_list' %}">
+    Post Listing
+    </a>
+</p>
+    
+<table class="table">
+    <tr><td>forum</td><td>{{ object.category.name }}</td></tr>
+    <tr><td>source</td><td>{{ object.source_url }}</td></tr>
+    <tr><td>reply_to</td><td>{{ object.reply_to }}</td></tr>
+    <tr><td>is_op</td><td>{{ object.is_op }}</td></tr>
+    <tr><td>bytes</td><td>{{ object.bytes }}</td></tr>
+    <tr><td>url</td><td>{{ object.url }}</td></tr>
+    <tr><td>votes</td><td>{{ object.votes }}</td></tr>
+    <tr><td>hits</td><td>{{ object.hits }}</td></tr>
+    <tr><td>post_date</td><td>{{ object.post_date }}</td></tr>
+    <tr><td>title</td><td>{{ object.title }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'nick_Post_list' %}">
+    Post Listing
+    </a>
+</p>
+    
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{form.errors}}
+  <div class="form-group row">
+  <label class="col-sm-2 col-form-label" for="reply_to">reply_to: </label>
+  <input class="form-control col-sm-10" id="reply_to" type="number" name="reply_to" value="{{ object.reply_to }}">
+  </div>
+  <div class="form-group row">
+  <label class="col-sm-2 col-form-label" for="bytes">bytes: </label>
+  <input class="form-control col-sm-10" id="bytes" type="number" name="bytes" value="{{ object.bytes }}">
+  </div>
+  <div class="form-group row">
+  <label class="col-sm-2 col-form-label" for="url">url: </label>
+  <input class="form-control col-sm-10" id="url" type="number" name="url" value="{{ object.url }}">
+  </div>
+  <div class="form-group row">
+  <label class="col-sm-2 col-form-label" for="votes">votes: </label>
+  <input class="form-control col-sm-10" id="votes" type="number" name="votes" value="{{ object.votes }}">
+  </div>
+  <div class="form-group row">
+  <label class="col-sm-2 col-form-label" for="hits">hits: </label>
+  <input class="form-control col-sm-10" id="hits" type="number" name="hits" value="{{ object.hits }}">
+  </div>
+  <div class="form-group row">
+  <label class="col-sm-2 col-form-label" for="post_date">post_date: </label>
+  <input class="form-control col-sm-10" id="post_date" type="datetime-local" name="post_date" value="{{ object.post_date }}">
+  </div>
+  <div class="form-group row">
+  <label class="col-sm-2 col-form-label" for="title">title: </label>
+  <input class="form-control col-sm-10" id="title" type="text" name="title" value="{{ object.title }}">
+  </div>
+  <input type="submit" value="Save" class="btn btn-primary">
+</form>
+
+{% endblock %}
