@@ -2,6 +2,8 @@
 
 # -*- coding: utf-8 -*-
 # initialize django
+from nick.models import Nick, Category, Post
+from django.db import IntegrityError
 import os
 import sys
 import django
@@ -13,9 +15,6 @@ from datetime import datetime
 sys.path.append('/home/zhou3594/workspace/clean')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'clean.settings'
 django.setup()
-
-from django.db import IntegrityError
-from nick.models import Nick, Category, Post
 
 
 try:
@@ -78,20 +77,38 @@ def save_page(item):
         ]
 
         # decouple this into main method
-        post_obj_list = dict(zip(
-            [post['url'] for post in post_list],
-            # Post.objects.bulk_create(posts, ignore_conflicts=True)
-            Post.objects.bulk_create(posts)
-        ))
+        # post_obj_list = dict(zip(
+        #     [post['url'] for post in post_list],
+        #     # Post.objects.bulk_create(posts, ignore_conflicts=True)
+        #     Post.objects.bulk_create(posts)
+        # ))
 
-        # try:
-        #     post_obj_list = dict(zip(
-        #         [post['url'] for post in post_list],
-        #         # Post.objects.bulk_create(posts, ignore_conflicts=True)
-        #         Post.objects.bulk_create(posts)
-        #     ))
-        # except IntegrityError as e:
-        #     pass
+        try:
+            post_obj_list = dict(zip(
+                [post['url'] for post in post_list],
+                # Post.objects.bulk_create(posts, ignore_conflicts=True)
+                Post.objects.bulk_create(posts)
+            ))
+        except IntegrityError:
+            for p in post_list:
+                post_obj_list[p['url']] = Post.objects.get_or_create(
+                    title=p['title'],
+                    category=category,
+                    url=p['url'],
+                    nick=nicks[p['nick']],  # what index?
+                    post_date=pytz.utc.localize(
+                        datetime.strptime(p['post_date'], "%m/%d/%Y %H:%M:%S")),
+                    bytes=p['bytes'],
+                    hits=0,
+                    votes=0,
+                    reply_to=None if (
+                        not post_obj_list) else post_obj_list[p['reply_to']]
+                )[0]
+
+            # post_obj_list = dict(zip(
+            #     [post['url'] for post in post_list],
+            #     [Post.objects.get_or_create(*post) for post in posts]
+            # ))
 
         remained_post_list = [
             post for post in item['threads'] if post not in post_list]
@@ -102,7 +119,7 @@ def save_page(item):
 def main():
     # 指定redis数据库信息
     rediscli = redis.StrictRedis(
-        host='127.0.0.1', port=6379, db=0, password=REDIS_PASSWORD)
+        host=REDIS_HOST, port=6379, db=0, password=REDIS_PASSWORD)
 
     # host='127.0.0.1', port=6379, db=0, password='e5UyadfZ$UhuDN!d8gL$eLo$YKB3thKm')
 

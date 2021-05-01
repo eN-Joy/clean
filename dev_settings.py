@@ -26,5 +26,6 @@ DATABASES = {
 }
 
 # scrapy
+REDIS_HOST = '127.0.0.1'
 REDIS_URL = "redis://:e5UyadfZ$UhuDN!d8gL$eLo$YKB3thKm@127.0.0.1:6379"
 REDIS_PASSWORD = 'e5UyadfZ$UhuDN!d8gL$eLo$YKB3thKm'
