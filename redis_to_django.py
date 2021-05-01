@@ -2,8 +2,6 @@
 
 # -*- coding: utf-8 -*-
 # initialize django
-from nick.models import Nick, Category, Post
-from django.db import IntegrityError
 import os
 import sys
 import django
@@ -16,6 +14,8 @@ sys.path.append('/home/zhou3594/workspace/clean')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'clean.settings'
 django.setup()
 
+from nick.models import Nick, Category, Post
+from django.db import IntegrityError
 
 try:
     from dev_settings import *
