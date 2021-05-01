@@ -10,7 +10,7 @@ WXCBASE = 'https://bbs.wenxuecity.com'
 class Nick(models.Model):
 
     # Fields
-    name = models.CharField(max_length=20, db_index=True, unique=True)
+    name = models.CharField(max_length=50, db_index=True, unique=True)
     gender = models.BooleanField(null=True)
 
 
@@ -67,8 +67,8 @@ class Nick(models.Model):
 class Category(models.Model):
 
     # Fields
-    slug = models.SlugField(max_length=20)
-    name = models.CharField(max_length=20, unique=True)
+    slug = models.SlugField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     parent = models.ForeignKey(
         'self', null=True, default=None, on_delete=CASCADE)
 
