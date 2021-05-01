@@ -90,8 +90,10 @@ def save_page(item):
                 Post.objects.bulk_create(posts)
             ))
         except IntegrityError:
+            # post_obj_list, wrong logic
+            post_recovered_list = {}
             for p in post_list:
-                post_obj_list[p['url']] = Post.objects.get_or_create(
+                post_recovered_list[p['url']] = Post.objects.get_or_create(
                     title=p['title'],
                     category=category,
                     url=p['url'],
@@ -104,7 +106,7 @@ def save_page(item):
                     reply_to=None if (
                         not post_obj_list) else post_obj_list[p['reply_to']]
                 )[0]
-
+            post_obj_list = post_recovered_list
             # post_obj_list = dict(zip(
             #     [post['url'] for post in post_list],
             #     [Post.objects.get_or_create(*post) for post in posts]

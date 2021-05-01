@@ -3,7 +3,7 @@ SECRET_KEY = '^l)7d*%h&db4uft@dk%h-w&nup#pu%)a!d)c7jwgoixo5_hm0$'
 DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'dupfilter',
+            'NAME': 'recover',
             'USER': 'zhou3594',
             'PASSWORD': 'mary7718',
             'HOST': 'sql',
