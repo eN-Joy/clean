@@ -6,4 +6,4 @@
  
  04-30-2021
  scraped 17,445,753 rows (postgre report)
- 
+ integrityerror: 88769

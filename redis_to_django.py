@@ -59,22 +59,42 @@ def save_page(item):
     post_obj_list = {}
 
     while post_list:
+        # create dict instead of model instance here
         posts = [
-            Post(
-                title=p['title'],
-                category=category,
-                url=p['url'],
-                nick=nicks[p['nick']],  # what index?
-                post_date=pytz.utc.localize(
+            {
+                'title':p['title'],
+                'category':category,
+                'url':p['url'],
+                'nick':nicks[p['nick']],  # what index?
+                'post_date':pytz.utc.localize(
                     datetime.strptime(p['post_date'], "%m/%d/%Y %H:%M:%S")),
-                bytes=p['bytes'],
-                hits=0,
-                votes=0,
-                reply_to=None if (
+                'bytes':p['bytes'],
+                'hits':0,
+                'votes':0,
+                'reply_to':None if (
                     not post_obj_list) else post_obj_list[p['reply_to']]
-            )
+            }
             for p in post_list
         ]
+    # while post_list:
+    #     # create dict instead of model instance here
+    #     posts = [
+    #         Post(
+    #             title=p['title'],
+    #             category=category,
+    #             url=p['url'],
+    #             nick=nicks[p['nick']],  # what index?
+    #             post_date=pytz.utc.localize(
+    #                 datetime.strptime(p['post_date'], "%m/%d/%Y %H:%M:%S")),
+    #             bytes=p['bytes'],
+    #             hits=0,
+    #             votes=0,
+    #             reply_to=None if (
+    #                 not post_obj_list) else post_obj_list[p['reply_to']]
+    #         )
+    #         for p in post_list
+    #     ]
+
 
         # decouple this into main method
         # post_obj_list = dict(zip(
@@ -87,30 +107,39 @@ def save_page(item):
             post_obj_list = dict(zip(
                 [post['url'] for post in post_list],
                 # Post.objects.bulk_create(posts, ignore_conflicts=True)
-                Post.objects.bulk_create(posts)
+                Post.objects.bulk_create([Post(**post) for post in posts])
             ))
         except IntegrityError:
-            # post_obj_list, wrong logic
             post_recovered_list = {}
-            for p in post_list:
-                post_recovered_list[p['url']] = Post.objects.get_or_create(
-                    title=p['title'],
-                    category=category,
-                    url=p['url'],
-                    nick=nicks[p['nick']],  # what index?
-                    post_date=pytz.utc.localize(
-                        datetime.strptime(p['post_date'], "%m/%d/%Y %H:%M:%S")),
-                    bytes=p['bytes'],
-                    hits=0,
-                    votes=0,
-                    reply_to=None if (
-                        not post_obj_list) else post_obj_list[p['reply_to']]
-                )[0]
+            for post in posts:
+                try:
+                    post_recovered_list[post['url']] = Post.objects.get_or_create(**post)[0]
+                except IntegrityError:
+                    pass
+
             post_obj_list = post_recovered_list
-            # post_obj_list = dict(zip(
-            #     [post['url'] for post in post_list],
-            #     [Post.objects.get_or_create(*post) for post in posts]
-            # ))
+            
+            # # post_obj_list, wrong logic
+            # post_recovered_list = {}
+            # for p in post_list:
+            #     post_recovered_list[p['url']] = Post.objects.get_or_create(
+            #         title=p['title'],
+            #         category=category,
+            #         url=p['url'],
+            #         nick=nicks[p['nick']],  # what index?
+            #         post_date=pytz.utc.localize(
+            #             datetime.strptime(p['post_date'], "%m/%d/%Y %H:%M:%S")),
+            #         bytes=p['bytes'],
+            #         hits=0,
+            #         votes=0,
+            #         reply_to=None if (
+            #             not post_obj_list) else post_obj_list[p['reply_to']]
+            #     )[0]
+            # post_obj_list = post_recovered_list
+            # # post_obj_list = dict(zip(
+            # #     [post['url'] for post in post_list],
+            # #     [Post.objects.get_or_create(*post) for post in posts]
+            # # ))
 
         remained_post_list = [
             post for post in item['threads'] if post not in post_list]
